@@ -8,7 +8,8 @@ import java.net.*;
 import java.io.*;
 
 import java.util.Calendar;
-import java.text.SimpleDateFormat;import javax.swing.*;
+import java.text.SimpleDateFormat;
+import javax.swing.*;
 
 public class Client implements ActionListener{
     
@@ -192,7 +193,7 @@ public class Client implements ActionListener{
             dout.writeUTF(out);
             t1.setText("");
         }catch(Exception e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
     
@@ -243,7 +244,7 @@ public class Client implements ActionListener{
             }
             
         }catch(Exception e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
     }    

@@ -212,7 +212,7 @@ public class Server implements ActionListener{
             t1.setText("");
 
         }catch(Exception e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
     
@@ -262,7 +262,7 @@ public class Server implements ActionListener{
             }
             
         }catch(Exception e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
             e.printStackTrace();
         }
     }    
