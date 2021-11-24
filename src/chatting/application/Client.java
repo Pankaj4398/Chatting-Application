@@ -201,25 +201,32 @@ public class Client implements ActionListener{
         
         try{
             String out = t1.getText();
+            if(out.equals("Type Message Here") || out.equals("")){ //send button disable
 
-            sendTextToFile(out);
-            t1.setText("Type Message Here");//set back to placeholder
-            t1.setForeground(Color.GRAY);
-            JPanel p2 = formatLabel(out);
-            
-            a1.setLayout(new BorderLayout());
-            
-            JPanel right = new JPanel(new BorderLayout());
-            right.add(p2, BorderLayout.LINE_END);
-            vertical.add(right);
-            vertical.add(Box.createVerticalStrut(15));
-            
-            a1.add(vertical, BorderLayout.PAGE_START);
-            
-            //a1.add(p2);
-            //Writes a string to the underlying output stream
-            dout.writeUTF(out);
-            t1.setText("");
+            } else {
+                //add chats to txt file
+                sendTextToFile(out);
+                t1.setText("Type Message Here");//set back to placeholder
+                t1.setForeground(Color.GRAY);
+                //display mssg/data which we sent to right side of display panel
+                JPanel p2 = formatLabel(out);//provide the format to mssg individual panel
+
+                a1.setLayout(new BorderLayout());
+
+                JPanel right = new JPanel(new BorderLayout());
+                right.add(p2, BorderLayout.LINE_END); //right side
+                //help to align mssg vertically
+                vertical.add(right);
+                vertical.add(Box.createVerticalStrut(15));//use this method to force a certain amount of space between two components.
+
+                //a1.add(p2);
+                //now add vertical box not p2 individual mssg panel
+                a1.add(vertical, BorderLayout.PAGE_START);
+
+                //Writes a string to the underlying output stream
+                dout.writeUTF(out);
+                t1.setText("");
+            }
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
