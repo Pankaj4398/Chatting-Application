@@ -111,6 +111,29 @@ public class Client implements ActionListener{
        t1.setBounds(5, 655, 310, 40);
        t1.setFont(new Font("SAN_SERIF", Font.PLAIN, 16));
        f1.add(t1);
+        if (t1.getText().length() == 0) {
+            t1.setText("Type Message Here");
+            t1.setForeground(Color.GRAY);
+        }
+        f1.setFocusable(true);// used to activate or deactivate the focus event
+        //placeholder in text field ->focus gained -> click on textfield to edit mssg placeholder removes
+        t1.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if(t1.getText().equals("Type Message Here")){
+                    t1.setText("");
+
+                }
+                t1.setForeground(Color.BLACK);
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (t1.getText().equals("")) {
+                    t1.setText("Type Message Here");
+                }
+                t1.setForeground(Color.GRAY);
+            }
+        });
        
        t1.addKeyListener(new KeyAdapter(){
            public void keyPressed(KeyEvent ke){
@@ -141,7 +164,7 @@ public class Client implements ActionListener{
        f1.getContentPane().setBackground(Color.WHITE);
        f1.setLayout(null);
        f1.setSize(450, 700);
-       f1.setLocation(1100, 200); 
+       f1.setLocation(1000, 100);
        f1.setUndecorated(true);
        f1.setVisible(true);
         
@@ -151,7 +174,8 @@ public class Client implements ActionListener{
         
         try{
             String out = t1.getText();
-            
+            t1.setText("Type Message Here");//set back to placeholder
+            t1.setForeground(Color.GRAY);
             JPanel p2 = formatLabel(out);
             
             a1.setLayout(new BorderLayout());
@@ -164,6 +188,7 @@ public class Client implements ActionListener{
             a1.add(vertical, BorderLayout.PAGE_START);
             
             //a1.add(p2);
+            //Writes a string to the underlying output stream
             dout.writeUTF(out);
             t1.setText("");
         }catch(Exception e){
@@ -197,15 +222,16 @@ public class Client implements ActionListener{
         
         try{
             
-            s = new Socket("127.0.0.1", 6001);
-            din  = new DataInputStream(s.getInputStream());
-            dout = new DataOutputStream(s.getOutputStream());
+            s = new Socket("127.0.0.1", 6001);//Creates a stream socket and connects it to the specified port number on the named host.
+            din  = new DataInputStream(s.getInputStream());//A data input stream lets an application read primitive Java data types.
+            // an input stream for reading bytes from this socket
+            dout = new DataOutputStream(s.getOutputStream());//an output stream for writing bytes to this socket
             
             String msginput = "";
             
 	    while(true){
                 a1.setLayout(new BorderLayout());
-	        msginput = din.readUTF();
+	            msginput = din.readUTF();
             	JPanel p2 = formatLabel(msginput);
                 JPanel left = new JPanel(new BorderLayout());
                 left.add(p2, BorderLayout.LINE_START);
@@ -216,6 +242,9 @@ public class Client implements ActionListener{
                 f1.validate();
             }
             
-        }catch(Exception e){}
+        }catch(Exception e){
+            System.out.println(e);
+            e.printStackTrace();
+        }
     }    
 }
