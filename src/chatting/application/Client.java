@@ -175,6 +175,8 @@ public class Client implements ActionListener{
         
         try{
             String out = t1.getText();
+
+            sendTextToFile(out);
             t1.setText("Type Message Here");//set back to placeholder
             t1.setForeground(Color.GRAY);
             JPanel p2 = formatLabel(out);
@@ -217,7 +219,20 @@ public class Client implements ActionListener{
         p3.add(l2);
         return p3;
     }
-    
+    //save chats to a txt file
+    private void sendTextToFile(String mssg) {
+        try(FileWriter f = new FileWriter("chat.txt");
+            PrintWriter p = new PrintWriter(new BufferedWriter(f));)
+        {
+            p.println(getClass()+ mssg);//user name replace
+        } catch(IOException e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } catch(Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args){
         new Client().f1.setVisible(true);
         

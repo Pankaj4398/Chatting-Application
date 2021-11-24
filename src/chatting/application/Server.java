@@ -21,7 +21,7 @@ public class Server implements ActionListener{
     //mssg displaying panel
     static JPanel a1;
 
-    //
+    //Creates a Box that displays its components from top to bottom(Expand vertically)
     static Box vertical = Box.createVerticalBox();
 
     //Socket Programming
@@ -192,6 +192,9 @@ public class Server implements ActionListener{
     public void actionPerformed(ActionEvent ae){ //display sent mssg panel in display panel
         try{
             String out = t1.getText();//extract text from text field
+
+            //add chats to txt file
+            sendTextToFile(out);
             t1.setText("Type Message Here");//set back to placeholder
             t1.setForeground(Color.GRAY);
             //display mssg/data which we sent to right side of display panel
@@ -200,13 +203,15 @@ public class Server implements ActionListener{
             a1.setLayout(new BorderLayout());
             
             JPanel right = new JPanel(new BorderLayout());
-            right.add(p2, BorderLayout.LINE_END);
+            right.add(p2, BorderLayout.LINE_END); //right side
+            //help to align mssg vertically
             vertical.add(right);
-            vertical.add(Box.createVerticalStrut(15));
-            
-            a1.add(vertical, BorderLayout.PAGE_START);
-            
+            vertical.add(Box.createVerticalStrut(15));//use this method to force a certain amount of space between two components.
+
             //a1.add(p2);
+            //now add vertical box not p2 individual mssg panel
+            a1.add(vertical, BorderLayout.PAGE_START);
+
             //Writes a string to the underlying output stream
             dout.writeUTF(out);
             t1.setText("");
@@ -215,28 +220,42 @@ public class Server implements ActionListener{
             System.out.println(e.getMessage());
         }
     }
-    
+
     public static JPanel formatLabel(String out){ //provide format to each individual mssg panel
-        JPanel p3 = new JPanel();
-        p3.setLayout(new BoxLayout(p3, BoxLayout.Y_AXIS));
-        
-        JLabel l1 = new JLabel("<html><p style = \"width : 150px\">"+out+"</p></html>");
+        JPanel p3 = new JPanel();//create an individual panel for each mssg
+        p3.setLayout(new BoxLayout(p3, BoxLayout.Y_AXIS));//Y axis along grow means new panel comes along y-axis vertically
+        //mssg/data put into label
+        JLabel l1 = new JLabel("<html><p style = \"width : 150px\">"+out+"</p></html>");//in label wedon't have method to break text mssg in next line in case it goes big
+        //therefore use html format here we define max width of paragraph each line after that it break into new line.
         l1.setFont(new Font("Tahoma", Font.PLAIN, 16));
         l1.setBackground(new Color(37, 211, 102));
         l1.setOpaque(true);
-        l1.setBorder(new EmptyBorder(15,15,15,50));
+        l1.setBorder(new EmptyBorder(15,15,15,50));//padding space create around other element
         
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();//Gets a calendar using the default time zone and locale.
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         
-        JLabel l2 = new JLabel();
-        l2.setText(sdf.format(cal.getTime()));
+        JLabel l2 = new JLabel();//time -> label
+        l2.setText(sdf.format(cal.getTime()));//current time
         
-        p3.add(l1);
+        p3.add(l1);//add both label into panel
         p3.add(l2);
         return p3;
     }
-    
+    //save chats to a txt file
+    private void sendTextToFile(String mssg){
+        try(FileWriter f = new FileWriter("chat.txt");//Writes text to character files using a default buffer size.
+            PrintWriter p = new PrintWriter(new BufferedWriter(f));)//Prints formatted representations of objects to a text-output stream.
+        {
+            p.println(getClass()+ mssg);//user name replace
+        } catch(IOException e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        } catch(Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args){
         new Server().f1.setVisible(true);
         
@@ -255,8 +274,9 @@ public class Server implements ActionListener{
                     JPanel p2 = formatLabel(msginput);//provide the format to mssg individual panel
                     JPanel left = new JPanel(new BorderLayout());
                     left.add(p2, BorderLayout.LINE_START);//left side
+                    //help to align mssg vertically
                     vertical.add(left);
-                    f1.validate();
+                    f1.validate();//continuously adding panels to display panel as mssg rec or sent therefore each time refresh main frame to display that
             	}
                 
             }
