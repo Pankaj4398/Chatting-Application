@@ -276,7 +276,7 @@ public class Server implements ActionListener{
         try(FileWriter f = new FileWriter("chat.txt", true);//Writes text to character files using a default buffer size.
             PrintWriter p = new PrintWriter(new BufferedWriter(f));)//Prints formatted representations of objects to a text-output stream.
         {
-            p.println(Calendar.getInstance().getTime()+ " " + "Kalin Bhaiya : "+ mssg +"\n");//user name replace
+            p.println(Calendar.getInstance().getTime()+ " " + "Kalin Bhaiya : "+ mssg);//user name replace
         } catch(IOException e){
             System.out.println(e.getMessage());
             e.printStackTrace();
