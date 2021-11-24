@@ -10,6 +10,8 @@ import java.io.*;
 import java.util.Calendar;
 import java.text.SimpleDateFormat;
 import javax.swing.*;
+import javax.swing.plaf.ScrollBarUI;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 
 public class Client implements ActionListener{
     
@@ -102,11 +104,35 @@ public class Client implements ActionListener{
        
        t.setInitialDelay(2000);
 
-       a1 = new JPanel();
-       a1.setBounds(5, 75, 440, 570);
-       a1.setFont(new Font("SAN_SERIF", Font.PLAIN, 16));
-       f1.add(a1);
-       
+        a1 = new JPanel();
+        //a1.setBounds(5, 75, 440, 570);
+        a1.setFont(new Font("SAN_SERIF", Font.PLAIN, 16));
+        //f1.add(a1);//add mssg display panel directly on the frame
+
+
+        JScrollPane sp = new JScrollPane(a1);
+        sp.setBounds(5, 75, 440, 570);
+        sp.setBorder(BorderFactory.createEmptyBorder());
+        //f1.add(sp); shift after added ui
+        //Scrool Bar UI chnage
+        ScrollBarUI ui = new BasicScrollBarUI(){
+            @Override
+            protected JButton createDecreaseButton(int orientation){
+                JButton button = super.createDecreaseButton(orientation);
+                button.setBackground(new Color(7, 94, 84));
+                button.setForeground(Color.WHITE);
+                return button;
+            }
+            @Override
+            protected JButton createIncreaseButton(int orientation){
+                JButton button = super.createIncreaseButton(orientation);
+                button.setBackground(new Color(7, 94, 84));
+                button.setForeground(Color.WHITE);
+                return button;
+            }
+        };
+        sp.getVerticalScrollBar().setUI(ui);
+        f1.add(sp);
        
        t1 = new JTextField();
        t1.setBounds(5, 655, 310, 40);
@@ -221,10 +247,10 @@ public class Client implements ActionListener{
     }
     //save chats to a txt file
     private void sendTextToFile(String mssg) {
-        try(FileWriter f = new FileWriter("chat.txt");
+        try(FileWriter f = new FileWriter("chat.txt", true);
             PrintWriter p = new PrintWriter(new BufferedWriter(f));)
         {
-            p.println(getClass()+ mssg);//user name replace
+            p.println(Calendar.getInstance().getTime()+ " " + "Munna Bhaiya : "+ mssg);//user name replace
         } catch(IOException e){
             System.out.println(e.getMessage());
             e.printStackTrace();

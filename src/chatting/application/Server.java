@@ -2,6 +2,8 @@ package chatting.application;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.plaf.ScrollBarUI;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
@@ -115,9 +117,34 @@ public class Server implements ActionListener{
        //Display send mssg and rec mssg
         //First we use textArea then shift to panel
        a1 = new JPanel();
-       a1.setBounds(5, 75, 440, 570);
+       //a1.setBounds(5, 75, 440, 570);
        a1.setFont(new Font("SAN_SERIF", Font.PLAIN, 16));
-       f1.add(a1);//add mssg display panel directly on the frame
+       //f1.add(a1);//add mssg display panel directly on the frame
+
+        //scroll bar add to display mssg panel->a1 -> now we don't need setBounds and add to main frame a1 panel
+        JScrollPane sp = new JScrollPane(a1);
+        sp.setBounds(5, 75, 440, 570);
+        sp.setBorder(BorderFactory.createEmptyBorder());//to remove border which bydefault scrool bar provide
+        //f1.add(sp); shift after added ui
+        //Scrool Bar UI chnage
+        ScrollBarUI ui = new BasicScrollBarUI(){
+            @Override
+            protected JButton createDecreaseButton(int orientation){
+                JButton button = super.createDecreaseButton(orientation);
+                button.setBackground(new Color(7, 94, 84));
+                button.setForeground(Color.WHITE);
+                return button;
+            }
+            @Override
+            protected JButton createIncreaseButton(int orientation){
+                JButton button = super.createIncreaseButton(orientation);
+                button.setBackground(new Color(7, 94, 84));
+                button.setForeground(Color.WHITE);
+                return button;
+            }
+        };
+        sp.getVerticalScrollBar().setUI(ui);
+        f1.add(sp);
        
        //Text Field where we type our message
        t1 = new JTextField();
@@ -244,10 +271,12 @@ public class Server implements ActionListener{
     }
     //save chats to a txt file
     private void sendTextToFile(String mssg){
-        try(FileWriter f = new FileWriter("chat.txt");//Writes text to character files using a default buffer size.
+        //Passing true for the second parameter indicates that you want to append to the file;
+        // passing false means that you want to overwrite the file.
+        try(FileWriter f = new FileWriter("chat.txt", true);//Writes text to character files using a default buffer size.
             PrintWriter p = new PrintWriter(new BufferedWriter(f));)//Prints formatted representations of objects to a text-output stream.
         {
-            p.println(getClass()+ mssg);//user name replace
+            p.println(Calendar.getInstance().getTime()+ " " + "Kalin Bhaiya : "+ mssg +"\n");//user name replace
         } catch(IOException e){
             System.out.println(e.getMessage());
             e.printStackTrace();
